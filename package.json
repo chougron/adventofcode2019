@@ -1,0 +1,24 @@
+{
+  "name": "adventofcode2019",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chougron/adventofcode2019.git"
+  },
+  "author": "Camille Hougron",
+  "bugs": {
+    "url": "https://github.com/chougron/adventofcode2019/issues"
+  },
+  "scripts": {
+    "start": "ts-node"
+  },
+  "homepage": "https://github.com/chougron/adventofcode2019#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^12.12.14",
+    "ts-node": "^8.5.4",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.2"
+  }
+}
