@@ -1,15 +1,15 @@
-import * as fs from "fs";
-import * as readline from "readline";
-import { OpCode, ParameterMode } from "./types";
+import * as fs from 'fs';
+import * as readline from 'readline';
+import { OpCode, ParameterMode } from './types';
 
 const dataStream = readline.createInterface({
-  input: fs.createReadStream("2019-12-05/exercice1/input.txt")
+  input: fs.createReadStream('2019-12-05/exercice2/input.txt'),
 });
 
 let codes: number[] = [];
-const input = 1;
-dataStream.on("line", (program: string) => {
-  const stringCode = program.split(",");
+const input = 5;
+dataStream.on('line', (program: string) => {
+  const stringCode = program.split(',');
   codes = stringCode.map(string => parseInt(string, 10));
 
   // Go through the program
@@ -41,13 +41,50 @@ dataStream.on("line", (program: string) => {
       case OpCode.OUTPUT:
         console.log(getParameterValue(parameters[0], position + 1));
         position += 2;
+        break;
+      case OpCode.JUMP_IF_TRUE:
+        if (getParameterValue(parameters[0], position + 1) !== 0) {
+          position = getParameterValue(parameters[1], position + 2);
+        } else {
+          position += 3;
+        }
+        break;
+      case OpCode.JUMP_IF_FALSE:
+        if (getParameterValue(parameters[0], position + 1) === 0) {
+          position = getParameterValue(parameters[1], position + 2);
+        } else {
+          position += 3;
+        }
+        break;
+      case OpCode.LESS_THAN:
+        if (
+          getParameterValue(parameters[0], position + 1) <
+          getParameterValue(parameters[1], position + 2)
+        ) {
+          codes[codes[position + 3]] = 1;
+        } else {
+          codes[codes[position + 3]] = 0;
+        }
+        position += 4;
+        break;
+      case OpCode.EQUALS:
+        if (
+          getParameterValue(parameters[0], position + 1) ===
+          getParameterValue(parameters[1], position + 2)
+        ) {
+          codes[codes[position + 3]] = 1;
+        } else {
+          codes[codes[position + 3]] = 0;
+        }
+        position += 4;
+        break;
     }
   }
 });
 
 function getParameterValue(
   parameterMode: ParameterMode | undefined,
-  codePosition: number
+  codePosition: number,
 ): number {
   if (parameterMode === ParameterMode.IMMEDIATE) {
     return codes[codePosition];
@@ -57,7 +94,7 @@ function getParameterValue(
 }
 
 function getOpCodeAndParameters(
-  code: number
+  code: number,
 ): { opCode: OpCode; parameters: ParameterMode[] } {
   const opCode = code % 100;
   code = Math.floor(code / 100);
